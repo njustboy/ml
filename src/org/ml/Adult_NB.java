@@ -2,9 +2,14 @@ package org.ml;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 /**
  * 
  * 朴素贝叶斯算法实现
+ * 属性都转换成连续值处理
  * @author Administrator
  *
  */
@@ -17,7 +22,7 @@ public class Adult_NB {
 	//总的训练样本数
 	private final int TOTAL_TRAIN_NUMBER = 32561;
 	//训练样本数
-	private final int TRAIN_NUMBER = 10000;
+	private final int TRAIN_NUMBER = 32561;
 	//测试样本数
 	private final int TEST_NUMBER = 16281;
 	//平均错误数
@@ -49,12 +54,19 @@ public class Adult_NB {
 				"files/adult_train.txt"));
 		String line = null;
 		line = br.readLine();
+		List<String> strs = new ArrayList<String>();
+		while(line!=null){
+			strs.add(line);
+			line = br.readLine();
+		}
+		Set<Integer> set = new HashSet<Integer>();
 		for (int i = 0; i < TRAIN_NUMBER; i++) {
-			int n = (int) (Math.random() * (TOTAL_TRAIN_NUMBER / TRAIN_NUMBER));
-			for (int j = 0; j <= n; j++) {
-				line = br.readLine();
-			}
-			String[] lines = line.split(",");
+//			int index = (int)(Math.random()*TOTAL_TRAIN_NUMBER);
+//			while(set.contains(index)){
+//				index = (int)(Math.random()*TOTAL_TRAIN_NUMBER);
+//			}
+//			set.add(index);
+			String[] lines = strs.get(i).split(",");
 			for (int j = 0; j < CHARACTER_NUMBER; j++) {
 				x_train[i][j] = ELFHash(lines[j], 10000);
 			}
@@ -161,7 +173,6 @@ public class Adult_NB {
 					/ Math.sqrt(2 * 3.14 * v[i][b]);
 		}
 		return temp;
-
 	}
 
 	public void result() {
