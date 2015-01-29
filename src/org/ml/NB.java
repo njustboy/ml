@@ -126,7 +126,7 @@ public class NB {
 					Set<Entry<String, Integer>> entrySet3 = value2.entrySet();
 					for (Entry<String, Integer> entry3 : entrySet3) {
 						double result3 = entry3.getValue()
-								/ (double)outMap.get(entry2.getKey());
+								/ (double) outMap.get(entry2.getKey());
 						result2.put(entry3.getKey(), result3);
 					}
 					result.put(entry2.getKey(), result2);
@@ -201,46 +201,53 @@ public class NB {
 	public void test(File testFile) {
 		FileReader fr = null;
 		BufferedReader br = null;
-		
-		try{
+
+		try {
 			fr = new FileReader(testFile);
 			br = new BufferedReader(fr);
 			String line = br.readLine();
 			int index = 0;
 			int rightNum = 0;
 			Set<String> keySet = outMap.keySet();
-			while(line!=null){
+			while (line != null) {
 				String[] segments = line.split(separate);
-				if(segments.length!=featureMap.size()+1){
+				if (segments.length != featureMap.size() + 1) {
 					line = br.readLine();
 					continue;
 				}
-				Map<String,Double> probMap = new HashMap<String, Double>();
-				for(String out:keySet){
+				Map<String, Double> probMap = new HashMap<String, Double>();
+				for (String out : keySet) {
 					double prob = 1;
-					for(int i=0;i<segments.length-1;i++){
+					for (int i = 0; i < segments.length - 1; i++) {
 						// 连续属性
-						if(featureMap.get(i)){
+						if (featureMap.get(i)) {
 							double dFeature = 0;
-							try{
+							try {
 								dFeature = Double.parseDouble(segments[i]);
-							}catch(Exception e){
-								
+							} catch (Exception e) {
+
 							}
 							double average = averageMap.get(i).get(out);
 							double variance = varianceMap.get(i).get(out);
-							prob *= Math.exp(-(dFeature-average)*(dFeature-average)/(2*variance))/(Math.sqrt(2*3.14*variance));
-						}else{
-							if(null==disFeatureProMap.get(i)){
-								System.out.println("the "+i+" in disFeatureProMap is null");
+							prob *= Math.exp(-(dFeature - average)
+									* (dFeature - average) / (2 * variance))
+									/ (Math.sqrt(2 * 3.14 * variance));
+						} else {
+							if (null == disFeatureProMap.get(i)) {
+								System.out.println("the " + i
+										+ " in disFeatureProMap is null");
 								prob = 0;
-							}else if(disFeatureProMap.get(i).get(out)==null){
-								System.out.println("the "+i+" in disFeatureProMap with "+out+" is null");
+							} else if (disFeatureProMap.get(i).get(out) == null) {
+								System.out.println("the " + i
+										+ " in disFeatureProMap with " + out
+										+ " is null");
 								prob = 0;
-							}else if(disFeatureProMap.get(i).get(out).get(segments[i])==null){
+							} else if (disFeatureProMap.get(i).get(out)
+									.get(segments[i]) == null) {
 								prob = 0;
-							}else{
-							prob *= disFeatureProMap.get(i).get(out).get(segments[i]);
+							} else {
+								prob *= disFeatureProMap.get(i).get(out)
+										.get(segments[i]);
 							}
 						}
 					}
@@ -248,27 +255,27 @@ public class NB {
 				}
 				double maxProb = 0;
 				String probOut = "";
-				Set<Entry<String,Double>> entrySet = probMap.entrySet();
-				for(Entry<String,Double> entry:entrySet){
-					if(entry.getValue()>maxProb){
+				Set<Entry<String, Double>> entrySet = probMap.entrySet();
+				for (Entry<String, Double> entry : entrySet) {
+					if (entry.getValue() > maxProb) {
 						maxProb = entry.getValue();
 						probOut = entry.getKey();
 					}
 				}
-				if(segments[segments.length-1].contains(probOut)){
+				if (segments[segments.length - 1].contains(probOut)) {
 					rightNum++;
 				}
 				index++;
 				line = br.readLine();
 			}
-			
-			System.out.println("测试样本共有"+index+"条数据");
-			System.out.println("共有"+rightNum+"条数据被成功分类");
-			System.out.println("分类器正确率为"+rightNum/(double)index);
-			
-		}catch(Exception e){
+
+			System.out.println("测试样本共有" + index + "条数据");
+			System.out.println("共有" + rightNum + "条数据被成功分类");
+			System.out.println("分类器正确率为" + rightNum / (double) index);
+
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			if (fr != null) {
 				try {
 					fr.close();
@@ -289,8 +296,8 @@ public class NB {
 
 	public static void main(String[] args) {
 		NB nb = new NB();
-		Map<Integer,Boolean> featureMap = new HashMap<Integer,Boolean>();
-		for(int i=0;i<64;i++){
+		Map<Integer, Boolean> featureMap = new HashMap<Integer, Boolean>();
+		for (int i = 0; i < 64; i++) {
 			featureMap.put(i, false);
 		}
 		String separate = ",";
